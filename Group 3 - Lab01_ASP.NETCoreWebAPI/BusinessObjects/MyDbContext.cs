@@ -15,11 +15,26 @@ namespace BusinessObjects
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            // Đường dẫn hiện tại
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            int lastBackslashIndex = currentDirectory.LastIndexOf('\\');
+
+            string newPath = currentDirectory.Substring(0, lastBackslashIndex) + "\\BusinessObjects";
+
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                .SetBasePath(newPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             IConfigurationRoot configuration = builder.Build();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("MyStoreDB"));
+
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("MyStoreDB"),
+                sqlServerOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(5),
+                        errorNumbersToAdd: null);
+                });
         }
 
         public virtual DbSet<Category> Categories { get; set; }

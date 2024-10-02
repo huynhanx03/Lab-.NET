@@ -15,7 +15,7 @@ namespace ProductManagementWebClient.Controllers
             client = new HttpClient();
             var contentType = new MediaTypeWithQualityHeaderValue("application/json");
             client.DefaultRequestHeaders.Accept.Add(contentType);
-            ProductApiUrl = "http://localhost:53633/api/products";
+            ProductApiUrl = "http://localhost:7283/api/Products";
         }
 
         public async Task<IActionResult> Index()
@@ -27,7 +27,9 @@ namespace ProductManagementWebClient.Controllers
             {
                 PropertyNameCaseInsensitive = true
             };
+            
             List<Product> listProducts = JsonSerializer.Deserialize<List<Product>>(strData, options);
+            
             return View(listProducts);
         }
 

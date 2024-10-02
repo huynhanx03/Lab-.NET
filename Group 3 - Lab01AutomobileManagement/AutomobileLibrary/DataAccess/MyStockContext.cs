@@ -9,7 +9,7 @@ namespace AutomobileLibrary.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=localhost\\SQLEXPRESS;database=MyStock;Trusted_Connection=True;TrustServerCertificate=True;");
+            optionsBuilder.UseSqlServer("server=(local);database=MyStock;uid=sa;pwd=123456;TrustServerCertificate=True;");
         }
     }
 
