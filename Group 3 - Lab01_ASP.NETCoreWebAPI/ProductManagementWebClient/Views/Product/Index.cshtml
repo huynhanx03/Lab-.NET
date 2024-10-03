@@ -26,8 +26,9 @@
                     <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
                     <td>@Html.DisplayFor(modelItem => item.UnitPrice)</td>
                     <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.ProductId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.ProductId })
+                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
                     </td>
                 </tr>
         }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BusinessObjects.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240930023605_InitialDB")]
+    [Migration("20241003133508_InitialDB")]
     partial class InitialDB
     {
         /// <inheritdoc />
@@ -115,13 +115,11 @@ namespace BusinessObjects.Migrations
 
             modelBuilder.Entity("BusinessObjects.Product", b =>
                 {
-                    b.HasOne("BusinessObjects.Category", "Category")
+                    b.HasOne("BusinessObjects.Category", null)
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("BusinessObjects.Category", b =>

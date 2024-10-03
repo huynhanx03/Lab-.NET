@@ -22,7 +22,7 @@ namespace ProjectManagementAPI.Controllers
             return NoContent();
         }
 
-        // GET: ProductsController/Delete/5
+        // Delete: ProductsController/Delete/5
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
@@ -41,6 +41,14 @@ namespace ProjectManagementAPI.Controllers
                 return NotFound();
             repository.UpdateProduct(p);
             return NoContent();
+        }
+
+        // GET: api/Products/Categories
+        [HttpGet("Categories")]
+        public ActionResult<IEnumerable<Category>> GetCategories()
+        {
+            var categories = repository.GetCategories();  // Fetch categories from repository
+            return Ok(categories);
         }
     }
 }
