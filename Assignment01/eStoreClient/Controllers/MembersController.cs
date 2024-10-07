@@ -39,6 +39,7 @@ namespace eStoreClient.Controllers
             HttpResponseMessage response = await client.GetAsync(MemberApiUrl + "/GetMemberById/" + id);
 
             Member member = new Member();
+
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 member = response.Content.ReadFromJsonAsync<Member>().Result;

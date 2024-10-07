@@ -18,22 +18,54 @@ namespace eStore.Controllers
             ProductApiUrl = "https://localhost:7211/api/Products";
         }
 
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    HttpResponseMessage response = await client.GetAsync(ProductApiUrl + "/GetProducts");
+        //    List<Product>? products = new List<Product>();
+        //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        products = response.Content.ReadFromJsonAsync<List<Product>>().Result;
+        //    }
+
+        //    HttpResponseMessage response2 = await client.GetAsync(ProductApiUrl + "/GetCategories");
+        //    List<Category>? categories = new List<Category>();
+        //    if (response2.StatusCode == System.Net.HttpStatusCode.OK)
+        //    {
+        //        categories = response2.Content.ReadFromJsonAsync<List<Category>>().Result;
+        //    }
+        //    ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName");
+
+        //    return View(products);
+        //}
+
+        public async Task<IActionResult> Index(string? searchString, decimal? unitPrice)
         {
             HttpResponseMessage response = await client.GetAsync(ProductApiUrl + "/GetProducts");
-            List<Product>? products = new List<Product>();
+            List<Product> products = new List<Product>();
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 products = response.Content.ReadFromJsonAsync<List<Product>>().Result;
             }
 
             HttpResponseMessage response2 = await client.GetAsync(ProductApiUrl + "/GetCategories");
-            List<Category>? categories = new List<Category>();
+            List<Category> categories = new List<Category>();
             if (response2.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 categories = response2.Content.ReadFromJsonAsync<List<Category>>().Result;
             }
             ViewData["CategoryId"] = new SelectList(categories, "CategoryId", "CategoryName");
+
+            // Filtering by ProductName
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.ProductName.Contains(searchString)).ToList();
+            }
+
+            // Filtering by UnitPrice
+            if (unitPrice.HasValue)
+            {
+                products = products.Where(p => p.UnitPrice >= unitPrice).ToList();
+            }
 
             return View(products);
         }

@@ -13,5 +13,6 @@ namespace DataAccess.Repository
         Category GetCategoryById(int id);
         void InsertCategory(Category c);
         void UpdateCategory(Category c);
+        void DeleteCategory(Category c);
     }
 }

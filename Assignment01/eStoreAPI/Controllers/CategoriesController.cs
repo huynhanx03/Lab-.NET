@@ -35,5 +35,17 @@ namespace eStoreAPI.Controllers
             repository.UpdateCategory(c);
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            var p = repository.GetCategoryById(id);
+            if (p == null)
+            {
+                return NotFound();
+            }
+            repository.DeleteCategory(p);
+            return NoContent();
+        }
     }
 }

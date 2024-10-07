@@ -17,5 +17,7 @@ namespace DataAccess.Repository
         public void InsertCategory(Category c) => CategoryDAO.Instance.InsertCategory(c);
 
         public void UpdateCategory(Category c) => CategoryDAO.Instance.UpdateCategory(c);
+
+        public void DeleteCategory(Category c) => CategoryDAO.Instance.DeleteCategory(c);
     }
 }

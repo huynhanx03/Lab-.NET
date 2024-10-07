@@ -6,162 +6,103 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http.Headers;
 
 namespace eStoreClient.Controllers
 {
     public class OrdersController : Controller
     {
+        private readonly HttpClient client = null;
+        private string OrderApiUrl = "";
         private readonly FStoreDBContext _context;
           
-        public OrdersController(FStoreDBContext context)
+        public OrdersController()
         {
-            _context = context;
+            client = new HttpClient();
+            var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+            client.DefaultRequestHeaders.Accept.Add(contentType);
+            OrderApiUrl = "https://localhost:7211/api/Orders";
+        }
+
+        public async Task<List<Order>> getOrders()
+        {
+            HttpResponseMessage response = await client.GetAsync(OrderApiUrl + "/GetOrders");
+            List<Order>? orders = new List<Order>();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                orders = response.Content.ReadFromJsonAsync<List<Order>>().Result;
+            }
+
+            return orders;
         }
 
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var FStoreDBContext = _context.Orders.Include(o => o.Member);
-            return View(await FStoreDBContext.ToListAsync());
+            return View(await getOrders());
         }
 
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.Member)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
+            HttpResponseMessage response = await client.GetAsync(OrderApiUrl + "/GetOrderByID/" + id);
+
+            Order order = new Order();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return NotFound();
+                order = response.Content.ReadFromJsonAsync<Order>().Result;
             }
 
             return View(order);
         }
 
-        // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Email");
             return View();
         }
 
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequiredDate,ShippedDate,Freight")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Email", order.MemberId);
-            return View(order);
-        }
-
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Email", order.MemberId);
-            return View(order);
-        }
-
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,MemberId,OrderDate,RequiredDate,ShippedDate,Freight")] Order order)
-        {
-            if (id != order.OrderId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.OrderId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MemberId"] = new SelectList(_context.Members, "MemberId", "Email", order.MemberId);
-            return View(order);
-        }
-
-        // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Orders == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Orders
-                .Include(o => o.Member)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
+            await client.DeleteAsync(OrderApiUrl + "/DeleteOrder/" + id);
 
-            return View(order);
+            return RedirectToAction("Index");
         }
 
-        // POST: Orders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Statistics(DateTime? startDate, DateTime? endDate)
         {
-            if (_context.Orders == null)
+            if (startDate == null || endDate == null)
             {
-                return Problem("Entity set 'FStoreDBContext.Orders'  is null.");
+                // Default to last 30 days if no dates provided
+                startDate = DateTime.Now.AddDays(-30);
+                endDate = DateTime.Now;
             }
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool OrderExists(int id)
-        {
-          return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();
+            var orders = await getOrders();
+
+            var salesReport = orders
+                .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+                .GroupBy(o => o.OrderDate.Date) // Nhóm theo ngày của OrderDate
+                .Select(g => new SalesReportModel
+                {
+                    OrderDate = g.Key, // Ngày của nhóm
+                    TotalSales = g.Sum(o => o.OrderDetails.Sum(od => od.Quantity * od.UnitPrice)) // Tính tổng doanh số cho nhóm
+                })
+                .OrderByDescending(r => r.TotalSales) // Sắp xếp theo tổng doanh số giảm dần
+                .ToList();
+
+            return View(salesReport);
         }
     }
 }

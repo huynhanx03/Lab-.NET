@@ -95,5 +95,21 @@ namespace DataAccess.DAO
             }
         }
 
+        public void DeleteCategory(Category c)
+        {
+            try
+            {
+                using (var context = new FStoreDBContext())
+                {
+                    var c1 = context.Categories.SingleOrDefault(cf => cf.CategoryId == c.CategoryId);
+                    context.Categories.Remove(c1);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

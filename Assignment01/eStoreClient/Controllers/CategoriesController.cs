@@ -96,5 +96,10 @@ namespace eStoreClient.Controllers
             return View(c);
         }
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            await client.DeleteAsync(CategoryApiUrl + "/DeleteCategory/" + id);
+            return RedirectToAction("Index");
+        }
     }
 }

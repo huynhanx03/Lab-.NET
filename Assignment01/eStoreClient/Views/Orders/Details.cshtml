@@ -34,14 +34,34 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Freight)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Member)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Member.Email)
-        </dd>
     </dl>
 </div>
+
+<div>
+    <h4>Order Details</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderDetail in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@orderDetail.Product.ProductName</td>
+                    <td>@orderDetail.Quantity</td>
+                    <td>@orderDetail.UnitPrice.ToString("C")</td>
+                    <td>@(orderDetail.Quantity * orderDetail.UnitPrice).ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.OrderId">Edit</a> |
     <a asp-action="Index">Back to List</a>
