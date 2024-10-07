@@ -33,7 +33,7 @@ namespace DataAccess.DAO
             List<Order> orders;
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     orders = context.Orders.ToList();
                 }
@@ -50,7 +50,7 @@ namespace DataAccess.DAO
             Order o = new Order();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     o = context.Orders.SingleOrDefault(x => x.OrderId == oId);
                 }
@@ -66,7 +66,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Orders.Add(o);
                     context.SaveChanges();
@@ -82,7 +82,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Entry<Order>(o).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     context.SaveChanges();
@@ -98,7 +98,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     var o1 = context.Orders.SingleOrDefault(c => c.OrderId == o.OrderId);
                     context.Orders.Remove(o1);

@@ -14,7 +14,7 @@ namespace DataAccess.DAO
             var ListOrderDetails = new List<OrderDetail>();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     ListOrderDetails = context.OrderDetails.ToList();
                 }

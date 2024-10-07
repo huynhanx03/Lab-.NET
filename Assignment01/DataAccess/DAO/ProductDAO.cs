@@ -15,7 +15,7 @@ namespace DataAccess.DAO
             var ListProducts = new List<Product>();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     ListProducts = context.Products.ToList();
                 }
@@ -32,7 +32,7 @@ namespace DataAccess.DAO
             Product p = new Product();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     p = context.Products.SingleOrDefault(x => x.ProductId == proId);
                 }
@@ -48,7 +48,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Products.Add(p);
                     context.SaveChanges();
@@ -64,7 +64,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Entry<Product>(p).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     context.SaveChanges();
@@ -80,7 +80,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     var p1 = context.Products.SingleOrDefault(c => c.ProductId == p.ProductId);
                     context.Products.Remove(p1);

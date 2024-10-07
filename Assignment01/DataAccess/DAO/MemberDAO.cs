@@ -32,7 +32,7 @@ namespace DataAccess.DAO
             List<Member> members;
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     members = context.Members.ToList();
                 }
@@ -49,7 +49,7 @@ namespace DataAccess.DAO
             Member m = new Member();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     m = context.Members.SingleOrDefault(x => x.MemberId == mId);
                 }
@@ -65,7 +65,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Members.Add(m);
                     context.SaveChanges();
@@ -81,7 +81,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Entry<Member>(m).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     context.SaveChanges();
@@ -97,7 +97,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     var m1 = context.Members.SingleOrDefault(c => c.MemberId == m.MemberId);
                     context.Members.Remove(m1);

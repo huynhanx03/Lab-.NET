@@ -11,9 +11,9 @@ namespace eStoreClient.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly PRN231_AS1Context _context;
+        private readonly FStoreDBContext _context;
           
-        public OrdersController(PRN231_AS1Context context)
+        public OrdersController(FStoreDBContext context)
         {
             _context = context;
         }
@@ -21,8 +21,8 @@ namespace eStoreClient.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var pRN231_AS1Context = _context.Orders.Include(o => o.Member);
-            return View(await pRN231_AS1Context.ToListAsync());
+            var FStoreDBContext = _context.Orders.Include(o => o.Member);
+            return View(await FStoreDBContext.ToListAsync());
         }
 
         // GET: Orders/Details/5
@@ -56,7 +56,7 @@ namespace eStoreClient.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
+        public async Task<IActionResult> Create([Bind("OrderId,MemberId,OrderDate,RequiredDate,ShippedDate,Freight")] Order order)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace eStoreClient.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,MemberId,OrderDate,RequireDate,ShippedDate,Freight")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,MemberId,OrderDate,RequiredDate,ShippedDate,Freight")] Order order)
         {
             if (id != order.OrderId)
             {
@@ -147,7 +147,7 @@ namespace eStoreClient.Controllers
         {
             if (_context.Orders == null)
             {
-                return Problem("Entity set 'PRN231_AS1Context.Orders'  is null.");
+                return Problem("Entity set 'FStoreDBContext.Orders'  is null.");
             }
             var order = await _context.Orders.FindAsync(id);
             if (order != null)

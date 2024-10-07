@@ -34,7 +34,7 @@ namespace DataAccess.DAO
             var ListCategories = new List<Category>();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     ListCategories = context.Categories.ToList();
                 }
@@ -51,7 +51,7 @@ namespace DataAccess.DAO
             Category c = new Category();
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     c = context.Categories.SingleOrDefault(x => x.CategoryId == cId);
                 }
@@ -67,7 +67,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Categories.Add(c);
                     context.SaveChanges();
@@ -83,7 +83,7 @@ namespace DataAccess.DAO
         {
             try
             {
-                using (var context = new PRN231_AS1Context())
+                using (var context = new FStoreDBContext())
                 {
                     context.Entry<Category>(c).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     context.SaveChanges();

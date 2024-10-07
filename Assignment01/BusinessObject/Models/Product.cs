@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject.Models
 {
@@ -11,20 +9,15 @@ namespace BusinessObject.Models
         {
             OrderDetails = new HashSet<OrderDetail>();
         }
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ProductId { get; set; }
-        public int CategoryId { get; set; }
-        [Required]
-        [StringLength(40)]
-        public string ProductName { get; set; }
-        [Required]
-        public double Weight { get; set; }
-        [Required]
-        public decimal UnitPrice { get; set; }
-        [Required]
-        public int? UnitsInStock { get; set; }
 
-        public virtual Category? Category { get; set; } = null!;
+        public int ProductId { get; set; }
+        public int? CategoryId { get; set; }
+        public string ProductName { get; set; } = null!;
+        public string Weight { get; set; } = null!;
+        public decimal UnitPrice { get; set; }
+        public int UnitsInStock { get; set; }
+
+        public virtual Category? Category { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
