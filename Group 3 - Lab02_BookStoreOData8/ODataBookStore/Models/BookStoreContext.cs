@@ -9,8 +9,9 @@ namespace ODataBookStore
             : base(options)
         {
         }
-        public DbSet<Press> Presses { get; set; }
         public DbSet<Book> Books { get; set; }
+
+        public DbSet<Press> Presses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
