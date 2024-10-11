@@ -11,7 +11,7 @@ namespace ODataBookStore.Controllers
         public PressesController(BookStoreContext context)
         {
             db = context;
-            if (context.Books.Count() == 6)
+            if (context.Books.Count() == 0)
             {
                 foreach (var b in DataSource.GetBooks())
                 {
