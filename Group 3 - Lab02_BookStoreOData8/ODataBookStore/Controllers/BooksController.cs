@@ -35,6 +35,7 @@ namespace ODataBookStore.Controllers
         {
             return Ok(db.Books.FirstOrDefault(c => c.Id == key));
         }
+
         [EnableQuery]
         public IActionResult Post([FromBody] Book book)
         {

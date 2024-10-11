@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using ODataBookStoreWebClient.Models;
 using System.Collections.Generic;
@@ -61,18 +62,24 @@ namespace ODataBookStoreWebClient.Controllers
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ISBN,Title,Author,Price,Location,Press")] Book book)
+        public async Task<IActionResult> Create([FromBody] Book book)
         {
-            if (ModelState.IsValid)
+            book.Location = new Address { City = "1", Street = "2" };
+            book.Press = new Press
             {
-                HttpResponseMessage response1 = await client.PostAsJsonAsync(ProductApiUrl, book);
-                response1.EnsureSuccessStatusCode();
+                Id = 3,
+                Name = "Suzuki",
+                Category = Category.Book,
+            };
 
-                // return response.Headers.Location;
-                return RedirectToAction(nameof(Index));
-            }
+            HttpResponseMessage response1 = await client.PostAsJsonAsync(ProductApiUrl, book);
+            
+            if (response1.IsSuccessStatusCode)
+                return Redirect("/Book/Index");
+
             return View();
         }
 
