@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var tokenCookie = Context.Request.Cookies["token"];
+}
+
+<div class="container mt-3">
+    <div class="layout_container">
+        <div class="layout_header">
+            <h2>Products</h2>
+            <button id="button_add" data-bs-toggle="modal" style="display: none" data-bs-target="#exampleModal">Add</button>
+        </div>
+        <div>
+            <div class="input-group rounded">
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" oninput="getProducts(this.value)" id="input_search" />
+            </div>
+            <table class="table table-hover" id="productTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category Name</th>
+                        <th>Unit Price</th>
+                        <th>Unit Stock</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+        // Gọi function để lấy dữ liệu và gán vào bảng khi trang được load
+        $(document).ready(function () {
+            getProducts();
+            getCategory();
+            $('#spinner').hide();
+        });
+    </script>
+    <!--
+        Model
+    -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="popup-form" class="row g-3" onsubmit="addProduct(event)">
+                        <div class="col-md-6">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputCategory" class="form-label">Category</label>
+                            <select id="inputCategory" class="form-select">
+                                <option selected>Choose...</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="inputPrice" class="form-label">Unit Price</label>
+                            <input type="number" class="form-control" id="inputPrice" placeholder="1234">
+                        </div>
+                        <div class="col-12">
+                            <label for="inputStock" class="form-label">Unit Stock</label>
+                            <input type="number" class="form-control" id="inputStock" placeholder="1245">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancle</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+

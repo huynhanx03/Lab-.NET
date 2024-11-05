@@ -1,0 +1,108 @@
+﻿@{
+    @using Newtonsoft.Json;
+    var tokenCookie = Context.Request.Cookies["token"];
+    var product = Context.Request.Cookies["product"];
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - eStore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/eStore.styles.css" asp-append-version="true" />
+    <script src="https://unpkg.com/ionicons@latest/dist/ionicons.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">eStore</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                    </ul>
+                    <div class="button_card">
+                        <div data-toggle="tooltip" title="Card" onclick="showCard()">
+                            <ion-icon name="cart-outline" style="font-size: 25px"></ion-icon>
+                        </div>
+                        @if (string.IsNullOrEmpty(tokenCookie))
+                        {
+                            <button onclick="document.getElementById('id01').style.display='block'" class="button_login" style="width:auto;">Login</button>
+                        }
+                        else
+                        {
+                            <button onclick="logout()" style="width:auto;" class="button_login">Logout</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <div id="spinner" class="spinner-container" style="display: none;">
+        <div class="loader"></div>
+    </div>
+    <div id="id01" class="modal">
+        <form class="modal-content_login animate" onsubmit="login(event)" id="popup-form-login">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img src="https://th.bing.com/th/id/R.4b81029cd676d7021eff2e5c8ad419d8?rik=Ue6EpOg%2bHKsCVQ&pid=ImgRaw&r=0" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <label for="unameL"><b>Username</b></label>
+                <input class="input_login" type="text" placeholder="Enter Username" name="unameL" id="uname" required>
+
+                <label for="pswL"><b>Password</b></label>
+                <input class="input_login" type="password" placeholder="Enter Password" id="pswL" name="psw" required>
+
+                <button type="submit" class="button_login">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
+
+            <div class="container_login" style="background-color:#f1f1f1">
+                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+                <span class="psw">Forgot <a href="#">password?</a></span>
+            </div>
+        </form>
+    </div>
+    <div id="id02" class="modal">
+        <form class="modal-content_login animate" onsubmit="checkout(event)" method="post">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img src="https://th.bing.com/th/id/R.4b81029cd676d7021eff2e5c8ad419d8?rik=Ue6EpOg%2bHKsCVQ&pid=ImgRaw&r=0" alt="Avatar" class="avatar">
+            </div>
+            <div>
+                <hr>
+            </div>
+            <div class="productContainer">
+            </div>
+        </form>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2023 - eStore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+</body>
+</html>
