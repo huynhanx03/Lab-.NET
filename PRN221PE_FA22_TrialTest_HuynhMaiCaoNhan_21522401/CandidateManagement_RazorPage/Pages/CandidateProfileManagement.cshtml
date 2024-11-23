@@ -1,0 +1,104 @@
+﻿@page
+@model CandidateManagement_RazorPage.Pages.CandidateProfileManagement
+@{
+ViewData["Title"] = "Candidate Profile Management";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+<div style="background-color: #dff0d8; color: #3c763d; padding: 15px; margin-bottom: 20px; border: 1px solid #d6e9c6; border-radius: 4px;">
+    @TempData["SuccessMessage"]
+</div>
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+<div>
+    <h1>Candidate Profile Management</h1>
+    <form method="post" asp-page-handler="Search">
+        <input type="text" name="searchTerm"/>
+        <div>
+            <label>
+                <input type="radio" name="searchBy" value="name" checked="" />
+                By Name
+            </label>
+            <label>
+                <input type="radio" name="searchBy" value="description"/>
+                By Description
+            </label>
+        </div>
+        <button type="submit">Search</button>
+    </form>
+    <form method="post">
+        <label style="font-size: 13px; font-family: Tahoma;">Candidate ID</label>
+        <input type="text" asp-for="SelectedCandidateProfile.CandidateId"/>
+
+        <label style="font-size: 13px; font-family: Tahoma;">Candidate Name</label>
+        <input type="text" asp-for="SelectedCandidateProfile.Fullname"/>
+
+        <label style="font-size: 13px; font-family: Tahoma;">Birthday</label>
+        <input type="date" asp-for="SelectedCandidateProfile.Birthday"/>
+
+        <label style="font-size: 13px; font-family: Tahoma;">Profile Description</label>
+        <input type="text" asp-for="SelectedCandidateProfile.ProfileShortDescription"/>
+
+        <label style="font-size: 13px; font-family: Tahoma;">Profile Url</label>
+        <input type="text" asp-for="SelectedCandidateProfile.ProfileUrl"/>
+
+        <label style="color: #0000ff; font-family: Tahoma;">Job Posting</label>
+        <select id="" asp-for="SelectedCandidateProfile.PostingId" asp-items="Model.JobTitles" style="width: 100%;">
+            <option value="">Select Job Posting</option>
+        </select>
+
+        <button type="submit" asp-page-handler="Add">Add</button>
+        <button type="submit" asp-page-handler="Update">Update</button>
+        <button type="submit" asp-page-handler="Delete">Delete</button>
+        <button type="submit" asp-page-handler="Clear">Clear</button>
+        
+    </form>
+    
+    <div>
+        <table border="1">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Birthday</th>
+                <th>Profile Description</th>
+                <th>Profile Url</th>
+                <th>Job Posting</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach(var candidate in Model.CandidateProfiles)
+            {
+                <tr>
+                    <td>@candidate.CandidateId</td>
+                    <td>@candidate.Fullname</td>
+                    <td>@candidate.Birthday</td>
+                    <td>@candidate.ProfileShortDescription</td>
+                    <td>@candidate.ProfileUrl</td>
+                    <td>@candidate.Posting?.JobPostingTitle</td>
+                    
+                    <td>
+                        <form method="post" asp-page-handler="Select">
+                            <input type="hidden" name="candidateId" value="@candidate.CandidateId"/>
+                            <button type="submit">Select</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
